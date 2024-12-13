@@ -1,0 +1,45 @@
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+        <!DOCTYPE html>
+        <html lang="en">
+
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>user detail ${id}</title>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        </head>
+
+        <body>
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-12 mx-auto">
+
+                        <h3>User detail with id ${id}</h3>
+
+                        <hr />
+                        <div class="card" style="width: 60%;">
+                            <div class="card-header">
+                                User Information
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">ID: 1</li>
+                                <li class="list-group-item">Email:</li>
+                                <li class="list-group-item">FullName:</li>
+                                <li class="list-group-item">Address:</li>
+
+                            </ul>
+                        </div>
+
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+        </body>
+
+        </html>
