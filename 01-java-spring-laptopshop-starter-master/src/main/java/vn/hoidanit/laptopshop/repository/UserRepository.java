@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long>, CrudRepositor
 
     List<User> findAll();
 
+    User findById(long id);
+
 }
