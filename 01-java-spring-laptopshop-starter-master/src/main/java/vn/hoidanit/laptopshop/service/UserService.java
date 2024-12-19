@@ -19,7 +19,7 @@ public class UserService {
         return "Hello from service";
     }
 
-    public User getUser(Long id) {
+    public User getUserById(Long id) {
         return this.userRepository.findById(id).get();
     }
 
