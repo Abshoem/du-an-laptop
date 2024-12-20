@@ -24,6 +24,7 @@
                                 User Information
                             </div>
                             <ul class="list-group list-group-flush">
+
                                 <li class="list-group-item">ID: ${userisfound.id}</li>
                                 <li class="list-group-item">Email: ${userisfound.email}</li>
                                 <li class="list-group-item">FullName: ${userisfound.fullName}</li>
