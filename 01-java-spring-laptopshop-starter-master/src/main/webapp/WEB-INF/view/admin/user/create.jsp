@@ -48,7 +48,7 @@
 
 
                                             <form:form method="post" action="/admin/user/create"
-                                                modelAttribute="newUser" class="row">
+                                                modelAttribute="newUser" class="row" enctype="multipart/form-data">
 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label">Email:</label>
@@ -73,16 +73,16 @@
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="role" class="form-label">Role:</label>
-                                                    <select id="role" class="form-select">
+                                                    <form:select id="role" class="form-select" path="role.name">
                                                         <option selected>Choose...</option>
-                                                        <option>Admin</option>
-                                                        <option>User</option>
-                                                    </select>
+                                                        <form:option value="ADMIN">Admin</form:option>
+                                                        <form:option value="USER">User</form:option>
+                                                    </form:select>
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label for="avatarFile" class="form-label">Avatar</label>
                                                     <input class="form-control" type="file" id="avatarFile"
-                                                        accept=".png, .jpg, .jpeg" />
+                                                        accept=".png, .jpg, .jpeg" name="hoidanitFile" />
                                                 </div>
                                                 <div class="mb-3 col-12 ">
                                                     <img src="" alt="" style="max-height:  250px; display: none;"

@@ -1,5 +1,9 @@
 package vn.hoidanit.laptopshop.controller.admin;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.stereotype.Controller;
@@ -10,12 +14,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.servlet.ServletContext;
 import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.repository.UserRepository;
+import vn.hoidanit.laptopshop.service.UploadService;
 import vn.hoidanit.laptopshop.service.UserService;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -23,9 +29,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class UserController {
 
     private final UserService userService;
+    private final UploadService uploadService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, UploadService uploadService) {
         this.userService = userService;
+        this.uploadService = uploadService;
 
     }
 
@@ -39,10 +47,18 @@ public class UserController {
     // return "hello";
     // }
 
-    @RequestMapping("/admin/user/create")
+    @GetMapping("/admin/user/create")
     public String getCreateUserPage(Model model) {
         model.addAttribute("newUser", new User());
         return "admin/user/create";
+    }
+
+    @PostMapping("/admin/user/create")
+    public String createUserPage(Model model, @ModelAttribute("newUser") User hoidanit,
+            @RequestParam("hoidanitFile") MultipartFile file) {
+        this.uploadService.handleSaveUploadFile(file, "avatar");
+        return "redirect:/admin/user";
+
     }
 
     @RequestMapping("/admin/user/{id}")
@@ -51,27 +67,19 @@ public class UserController {
         model.addAttribute("userisfound", user);
         return "admin/user/detail";
     }
-
+    // tao moi handle
     // @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
     // public String createUserPage(Model model, @ModelAttribute("newUser") User
-    // hoidanit) {
-    // System.out.println("run here" + hoidanit);
-    // this.userService.handelSaveUser(hoidanit);
-    // return "redirect:/admin/user";
-
+    // user, BindingResult bindingResult) {
+    // try {
+    // this.userService.handelSaveUser(user);
+    // } catch (IllegalArgumentException e) {
+    // bindingResult.rejectValue("email", "error.newUser", "Email đã tồn tại!");
+    // model.addAttribute("error", e.getMessage());
+    // return "admin/user/create";
     // }
-    // tao moi handle
-    @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
-    public String createUserPage(Model model, @ModelAttribute("newUser") User user, BindingResult bindingResult) {
-        try {
-            this.userService.handelSaveUser(user);
-        } catch (IllegalArgumentException e) {
-            bindingResult.rejectValue("email", "error.newUser", "Email đã tồn tại!");
-            model.addAttribute("error", e.getMessage());
-            return "admin/user/create";
-        }
-        return "redirect:/admin/user";
-    }
+    // return "redirect:/admin/user";
+    // }
 
     @RequestMapping("/admin/user")
     public String getUserPage(Model model) {
