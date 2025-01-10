@@ -6,16 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.repository.RoleRepository;
 import vn.hoidanit.laptopshop.repository.UserRepository;
+import vn.hoidanit.laptopshop.domain.Role;
 
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
-    // public UserService(UserRepository userRepository) {
-    // this.userRepository = userRepository;
-    // }
+    @Autowired
+    private RoleRepository roleRepository;
 
     public String handleHello() {
         return "Hello from service";
@@ -52,6 +52,10 @@ public class UserService {
 
     public void deleteAUser(long id) {
         this.userRepository.deleteById(id);
+    }
+
+    public Role getRoleByName(String name) {
+        return this.roleRepository.findByName(name);
     }
 
 }
