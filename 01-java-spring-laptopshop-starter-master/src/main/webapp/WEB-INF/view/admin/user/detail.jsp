@@ -36,6 +36,9 @@
                                             <h3>User detail with id ${id}</h3>
 
                                             <hr />
+                                            <li class="list-group-item"><img src="/images/avatar/${userisfound.avatar}"
+                                                alt="avatar" style="width: 200px; height: 200px;">
+                                        </li>
                                             <div class="card" style="width: 50%;">
                                                 <div class="card-header">
                                                     User Information

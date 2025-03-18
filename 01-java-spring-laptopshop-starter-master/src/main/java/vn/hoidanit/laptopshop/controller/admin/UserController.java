@@ -6,6 +6,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import javax.management.relation.Role;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -20,12 +22,15 @@ import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.servlet.ServletContext;
 import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.repository.RoleRepository;
 import vn.hoidanit.laptopshop.repository.UserRepository;
+import vn.hoidanit.laptopshop.service.RoleService;
 import vn.hoidanit.laptopshop.service.UploadService;
 import vn.hoidanit.laptopshop.service.UserService;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+
 
 @Controller
 public class UserController {
@@ -33,12 +38,14 @@ public class UserController {
     private final UserService userService;
     private final UploadService uploadService;
     private PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
     public UserController(UserService userService, UploadService uploadService,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder, RoleService roleService) {
         this.userService = userService;
         this.uploadService = uploadService;
         this.passwordEncoder = passwordEncoder;
+        this.roleService = roleService;
     }
 
     // @RequestMapping("/")
@@ -61,6 +68,7 @@ public class UserController {
     @PostMapping("/admin/user/create")
     public String createUserPage(Model model, @ModelAttribute("newUser") User hoidanit,
             @RequestParam("hoidanitFile") MultipartFile file) {
+               
         String avatar = this.uploadService.handleSaveUploadFile(file, "avatar");
         String hashPassword = this.passwordEncoder.encode(hoidanit.getPassword());
 
@@ -78,19 +86,7 @@ public class UserController {
         model.addAttribute("userisfound", user);
         return "admin/user/detail";
     }
-    // tao moi handle
-    // @RequestMapping(value = "/admin/user/create", method = RequestMethod.POST)
-    // public String createUserPage(Model model, @ModelAttribute("newUser") User
-    // user, BindingResult bindingResult) {
-    // try {
-    // this.userService.handelSaveUser(user);
-    // } catch (IllegalArgumentException e) {
-    // bindingResult.rejectValue("email", "error.newUser", "Email đã tồn tại!");
-    // model.addAttribute("error", e.getMessage());
-    // return "admin/user/create";
-    // }
-    // return "redirect:/admin/user";
-    // }
+    
 
     @RequestMapping("/admin/user")
     public String getUserPage(Model model) {
@@ -103,17 +99,25 @@ public class UserController {
     public String getUpdateUserPage(Model model, @PathVariable long id) {
         User user = this.userService.getUserById(id);
         model.addAttribute("newUser", user);
+        
         return "admin/user/update";
     }
 
     @PostMapping("/admin/user/update")
 
-    public String postUpdateUser(Model model, @ModelAttribute("newUser") User hoidanit) {
-        User user = this.userService.getUserById(hoidanit.getId());
+    public String postUpdateUser(Model model, @ModelAttribute("newUser") User update_user, @RequestParam("nameAvatarFile") MultipartFile avatarFile) {
+       
+        User user = this.userService.getUserById(update_user.getId());
         if (user != null) {
-            user.setAddress(hoidanit.getAddress());
-            user.setFullName(hoidanit.getFullName());
-            user.setPhone(hoidanit.getPhone());
+            if (!avatarFile.isEmpty()) {
+                String img = this.uploadService.handleSaveUploadFile(avatarFile, "avatar");
+                user.setAvatar(img);
+            }
+            user.setAddress(update_user.getAddress());
+            user.setFullName(update_user.getFullName());
+            user.setPhone(update_user.getPhone());
+            user.setRole(this.roleService.getRoleByName(update_user.getRole().getName()));
+            
             this.userService.handelSaveUser(user);
         }
         return "redirect:/admin/user";

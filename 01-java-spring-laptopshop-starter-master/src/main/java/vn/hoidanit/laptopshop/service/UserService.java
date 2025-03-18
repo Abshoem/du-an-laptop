@@ -33,22 +33,14 @@ public class UserService {
         return this.userRepository.findOneByEmail(email);
     }
 
-    // public User handelSaveUser(User user) {
-    // User eric = this.userRepository.save(user);
-    // return eric;
-    // }
-
     public User handelSaveUser(User user) {
-        if (emailExists(user.getEmail())) {
-            throw new IllegalArgumentException("Email " + user.getEmail() + " đã tồn tại!");
-        }
-        return this.userRepository.save(user);
+    User eric = this.userRepository.save(user);
+    return eric;
     }
 
-    private boolean emailExists(String email) {
-        List<User> users = userRepository.findOneByEmail(email);
-        return !users.isEmpty();
-    }
+    
+
+
 
     public void deleteAUser(long id) {
         this.userRepository.deleteById(id);
