@@ -15,7 +15,7 @@ public class RegisterDTO {
     private String email;
     private String password;
 
-    @Size(min = 3, message = "Mật khẩu phải có tối thiểu 3 ký tự")
+    @Size(min = 3, message = "Mật k hẩu phải có tối thiểu 3 ký tự")
     private String confirmPassword;
 
     public String getFirstName() {

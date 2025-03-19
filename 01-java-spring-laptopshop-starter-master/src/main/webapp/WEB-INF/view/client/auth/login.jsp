@@ -27,16 +27,25 @@
                                                 <h3 class="text-center font-weight-light my-4">Login</h3>
                                             </div>
                                             <div class="card-body">
-                                                <form>
+                                                <form method="post" action="/login">
+                                                    <c:if test="${param.error != null}">
+                                                        <div class="my-2" style="color: red;">Tài khoản hoặc mật khẩu không đúng!
+                                                        </div>
+                                                    </c:if>
+
                                                     <div class="form-floating mb-3">
-                                                        <input class="form-control" type="email"
-                                                            placeholder="name@example.com" />
-                                                        <label>Email address</label>
+                                                        <input class="form-control" id="inputEmail" type="email"
+                                                            placeholder="name@example.com" name="username" />
+                                                        <label for="inputEmail">Email address</label>
                                                     </div>
                                                     <div class="form-floating mb-3">
-                                                        <input class="form-control" type="password"
-                                                            placeholder="Password" />
-                                                        <label>Password</label>
+                                                        <input class="form-control" id="inputPassword" type="password"
+                                                            placeholder="Password" name="password" />
+                                                        <label for="inputPassword">Password</label>
+                                                    </div>
+                                                    <div>
+                                                        <input type="hidden" name="${_csrf.parameterName}"
+                                                            value="${_csrf.token}" />
                                                     </div>
 
                                                     <div class="mt-4 mb-0">
