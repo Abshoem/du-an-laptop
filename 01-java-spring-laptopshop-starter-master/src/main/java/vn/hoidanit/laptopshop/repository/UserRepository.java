@@ -20,4 +20,6 @@ public interface UserRepository extends JpaRepository<User, Long>, CrudRepositor
 
     User findById(long id);
 
+    boolean existsByEmail(String email);
+
 }
