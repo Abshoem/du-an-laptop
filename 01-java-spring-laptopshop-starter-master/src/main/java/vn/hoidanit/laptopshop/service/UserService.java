@@ -2,27 +2,23 @@ package vn.hoidanit.laptopshop.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import vn.hoidanit.laptopshop.domain.Role;
 import vn.hoidanit.laptopshop.domain.User;
+import vn.hoidanit.laptopshop.domain.dto.RegisterDTO;
 import vn.hoidanit.laptopshop.repository.RoleRepository;
 import vn.hoidanit.laptopshop.repository.UserRepository;
-import vn.hoidanit.laptopshop.domain.Role;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
-    public String handleHello() {
-        return "Hello from service";
-    }
-
-    public User getUserById(Long id) {
-        return this.userRepository.findById(id).get();
+    public UserService(UserRepository userRepository,
+            RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
     public List<User> getAllUsers() {
@@ -33,14 +29,15 @@ public class UserService {
         return this.userRepository.findOneByEmail(email);
     }
 
-    public User handelSaveUser(User user) {
-    User eric = this.userRepository.save(user);
-    return eric;
+    public User handleSaveUser(User user) {
+        User eric = this.userRepository.save(user);
+        System.out.println(eric);
+        return eric;
     }
 
-    
-
-
+    public User getUserById(long id) {
+        return this.userRepository.findById(id);
+    }
 
     public void deleteAUser(long id) {
         this.userRepository.deleteById(id);
@@ -50,4 +47,11 @@ public class UserService {
         return this.roleRepository.findByName(name);
     }
 
+    public User registerDTOtoUser(RegisterDTO registerDTO) {
+        User user = new User();
+        user.setFullName(registerDTO.getFirstName() + " " + registerDTO.getLastName());
+        user.setEmail(registerDTO.getEmail());
+        user.setPassword(registerDTO.getPassword());
+        return user;
+    }
 }

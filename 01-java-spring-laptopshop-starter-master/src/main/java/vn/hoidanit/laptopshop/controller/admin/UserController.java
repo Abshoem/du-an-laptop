@@ -86,7 +86,7 @@ public class UserController {
         hoidanit.setAvatar(avatar);
         hoidanit.setPassword(hashPassword);
         hoidanit.setRole(this.userService.getRoleByName(hoidanit.getRole().getName()));
-        this.userService.handelSaveUser(hoidanit);
+        this.userService.handleSaveUser(hoidanit);
         return "redirect:/admin/user";
 
     }
@@ -129,7 +129,7 @@ public class UserController {
             user.setPhone(update_user.getPhone());
             user.setRole(this.roleService.getRoleByName(update_user.getRole().getName()));
 
-            this.userService.handelSaveUser(user);
+            this.userService.handleSaveUser(user);
         }
         return "redirect:/admin/user";
     }
