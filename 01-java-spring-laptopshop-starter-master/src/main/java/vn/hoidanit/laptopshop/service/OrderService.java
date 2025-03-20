@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import vn.hoidanit.laptopshop.domain.Order;
 import vn.hoidanit.laptopshop.domain.OrderDetail;
+import vn.hoidanit.laptopshop.domain.User;
 import vn.hoidanit.laptopshop.repository.OrderDetailRepository;
 import vn.hoidanit.laptopshop.repository.OrderRepository;
 
@@ -15,11 +16,9 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderDetailRepository orderDetailRepository;
 
-    public OrderService(
-            OrderRepository orderRepository,
-            OrderDetailRepository orderDetailRepository) {
-        this.orderDetailRepository = orderDetailRepository;
+    public OrderService(OrderRepository orderRepository, OrderDetailRepository orderDetailRepository) {
         this.orderRepository = orderRepository;
+        this.orderDetailRepository = orderDetailRepository;
     }
 
     public List<Order> fetchAllOrders() {
@@ -31,7 +30,7 @@ public class OrderService {
     }
 
     public void deleteOrderById(long id) {
-        // delete order detail
+        // Step 1: Delete order_detail
         Optional<Order> orderOptional = this.fetchOrderById(id);
         if (orderOptional.isPresent()) {
             Order order = orderOptional.get();
@@ -41,6 +40,7 @@ public class OrderService {
             }
         }
 
+        // Step 2: delete order
         this.orderRepository.deleteById(id);
     }
 
@@ -51,5 +51,10 @@ public class OrderService {
             currentOrder.setStatus(order.getStatus());
             this.orderRepository.save(currentOrder);
         }
+
+    }
+
+    public List<Order> fetchOrdersByUser(User user) {
+        return this.orderRepository.findByUser(user);
     }
 }
