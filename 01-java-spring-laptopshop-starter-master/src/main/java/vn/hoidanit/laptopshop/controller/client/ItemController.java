@@ -33,7 +33,7 @@ public class ItemController {
     }
 
     @GetMapping("/product/{id}")
-    public String getDetailProductPage(Model model, @PathVariable long id) {
+    public String getProductPage(Model model, @PathVariable long id) {
         Product pr = this.productService.fetchProductById(id).get();
         model.addAttribute("product", pr);
         model.addAttribute("id", id);
@@ -148,7 +148,7 @@ public class ItemController {
     }
 
     @GetMapping("/products")
-    public String getProductPage(Model model, @RequestParam("page") Optional<String> pageOptional) {
+    public String getDetailProductPage(Model model, @RequestParam("page") Optional<String> pageOptional) {
         int page = 1;
         try {
             if (pageOptional.isPresent()) {
