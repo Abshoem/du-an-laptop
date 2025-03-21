@@ -19,7 +19,8 @@ import vn.hoidanit.laptopshop.service.UserService;
 
 @Configuration
 @EnableMethodSecurity(securedEnabled = true)
-public class SercurityConfiguration {
+public class SecurityConfiguration {
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -31,15 +32,13 @@ public class SercurityConfiguration {
     }
 
     @Bean
-    public DaoAuthenticationProvider authProvider(PasswordEncoder passwordEncoder,
+    public DaoAuthenticationProvider authProvider(
+            PasswordEncoder passwordEncoder,
             UserDetailsService userDetailsService) {
-
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder);
-        // tắt đi để tăng bảo mật
         // authProvider.setHideUserNotFoundExceptions(false);
-
         return authProvider;
     }
 
@@ -51,18 +50,23 @@ public class SercurityConfiguration {
     @Bean
     public SpringSessionRememberMeServices rememberMeServices() {
         SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
-
         // optionally customize
         rememberMeServices.setAlwaysRemember(true);
+
         return rememberMeServices;
     }
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // v6. lamda
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .dispatcherTypeMatchers(DispatcherType.FORWARD, DispatcherType.INCLUDE).permitAll()
-                        .requestMatchers("/", "/login", "/product/**", "/client/**", "/css/**", "/js/**", "/images/**")
+                        .dispatcherTypeMatchers(DispatcherType.FORWARD,
+                                DispatcherType.INCLUDE)
+                        .permitAll()
+
+                        .requestMatchers("/", "/login", "/product/**", "/register", "/products/**",
+                                "/client/**", "/css/**", "/js/**", "/images/**")
                         .permitAll()
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -71,15 +75,13 @@ public class SercurityConfiguration {
 
                 .sessionManagement((sessionManagement) -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
-
                         .invalidSessionUrl("/logout?expired")
                         .maximumSessions(1)
                         .maxSessionsPreventsLogin(false))
 
-                // .logout(logout->logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
+                .logout(logout -> logout.deleteCookies("JSESSIONID").invalidateHttpSession(true))
 
                 .rememberMe(r -> r.rememberMeServices(rememberMeServices()))
-
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/login?error")
@@ -89,4 +91,5 @@ public class SercurityConfiguration {
 
         return http.build();
     }
+
 }
